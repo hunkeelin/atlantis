@@ -12,11 +12,12 @@ import (
 )
 
 const (
-	ExtraArgsKey  = "extra_args"
-	RunStepName   = "run"
-	PlanStepName  = "plan"
-	ApplyStepName = "apply"
-	InitStepName  = "init"
+	ExtraArgsKey       = "extra_args"
+	RunStepName        = "run"
+	OktaPermissionName = "permission"
+	PlanStepName       = "plan"
+	ApplyStepName      = "apply"
+	InitStepName       = "init"
 )
 
 // Step represents a single action/command to perform. In YAML, it can be set as
@@ -52,7 +53,7 @@ func (s *Step) UnmarshalJSON(data []byte) error {
 func (s Step) Validate() error {
 	validStep := func(value interface{}) error {
 		str := *value.(*string)
-		if str != InitStepName && str != PlanStepName && str != ApplyStepName {
+		if str != InitStepName && str != PlanStepName && str != ApplyStepName && str != OktaPermissionName {
 			return fmt.Errorf("%q is not a valid step type, maybe you omitted the 'run' key", str)
 		}
 		return nil
@@ -72,7 +73,7 @@ func (s Step) Validate() error {
 				len(keys), strings.Join(keys, ","))
 		}
 		for stepName, args := range elem {
-			if stepName != InitStepName && stepName != PlanStepName && stepName != ApplyStepName {
+			if stepName != InitStepName && stepName != PlanStepName && stepName != ApplyStepName && stepName != OktaPermissionName {
 				return fmt.Errorf("%q is not a valid step type", stepName)
 			}
 			var argKeys []string
