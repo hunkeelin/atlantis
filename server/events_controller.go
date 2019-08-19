@@ -350,6 +350,8 @@ func (e *EventsController) HandleGitlabCommentEvent(w http.ResponseWriter, event
 		e.respond(w, logging.Error, http.StatusBadRequest, "Error parsing webhook: %s", err)
 		return
 	}
+	// Set the commenting user
+	e.CommandRunner.SetUser(event.User.Username)
 	e.handleCommentEvent(w, baseRepo, &headRepo, nil, user, event.MergeRequest.IID, event.ObjectAttributes.Note, models.Gitlab)
 }
 

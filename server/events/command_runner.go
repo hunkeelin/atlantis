@@ -35,6 +35,7 @@ type CommandRunner interface {
 	// and then calling the appropriate services to finish executing the command.
 	RunCommentCommand(baseRepo models.Repo, maybeHeadRepo *models.Repo, maybePull *models.PullRequest, user models.User, pullNum int, cmd *CommentCommand)
 	RunAutoplanCommand(baseRepo models.Repo, headRepo models.Repo, pull models.PullRequest, user models.User)
+	SetUser(user string)
 }
 
 //go:generate pegomock generate -m --use-experimental-model-gen --package mocks -o mocks/mock_github_pull_getter.go GithubPullGetter
@@ -77,6 +78,16 @@ type DefaultCommandRunner struct {
 	PendingPlanFinder PendingPlanFinder
 	WorkingDir        WorkingDir
 	DB                *db.BoltDB
+	// Add the user that is commenting
+	User      string // the user in github/gitlab that initiate the comment
+	OktaUrl   string // The oktaUrl
+	OktaToken string // The Oktaapi token
+	Org       string // The user's organization
+}
+
+// Set the user that is running the commenting command
+func (c *DefaultCommandRunner) SetUser(s string) {
+	c.User = s
 }
 
 // RunAutoplanCommand runs plan when a pull request is opened or updated.
@@ -318,6 +329,16 @@ func (c *DefaultCommandRunner) runProjectCmds(cmds []models.ProjectCommandContex
 		switch cmdName {
 		case models.PlanCommand:
 			res = c.ProjectCommandRunner.Plan(pCmd)
+			for _, step := range pCmd.Steps {
+				// klin testing
+				if step.StepName == "permission" {
+					fmt.Println("This is the step for permission", step.ExtraArgs)
+					fmt.Println("And the user that comment is", c.User)
+					fmt.Println("url token and org", c.OktaUrl, c.OktaToken, c.Org)
+				}
+				// Got the permission, now i need to get the user that is running the command.
+				// I need the okta token, oktaurl a
+			}
 		case models.ApplyCommand:
 			res = c.ProjectCommandRunner.Apply(pCmd)
 		}

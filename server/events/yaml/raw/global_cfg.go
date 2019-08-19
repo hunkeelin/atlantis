@@ -23,8 +23,6 @@ type Repo struct {
 	Workflow             *string  `yaml:"workflow,omitempty" json:"workflow,omitempty"`
 	AllowedOverrides     []string `yaml:"allowed_overrides" json:"allowed_overrides"`
 	AllowCustomWorkflows *bool    `yaml:"allow_custom_workflows,omitempty" json:"allow_custom_workflows,omitempty"`
-	OktaUrl              *string  `yaml:"oktaurl,omitempty" json:"oktaurl,omitempty"`
-	OktaToken            *string  `yaml:"oktatoken,omitempty" json:"oktatoken,omitempty"`
 }
 
 func (g GlobalCfg) Validate() error {
@@ -140,7 +138,6 @@ func (r Repo) ToValid(workflows map[string]valid.Workflow) valid.Repo {
 		ptr := workflows[*r.Workflow]
 		workflow = &ptr
 	}
-
 	return valid.Repo{
 		ID:                   id,
 		IDRegex:              idRegex,

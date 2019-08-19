@@ -283,6 +283,9 @@ func NewServer(userConfig UserConfig, config Config) (*Server, error) {
 		AllowForkPRs:             userConfig.AllowForkPRs,
 		AllowForkPRsFlag:         config.AllowForkPRsFlag,
 		DisableApplyAll:          userConfig.DisableApplyAll,
+		OktaUrl:                  userConfig.OktaUrl,
+		OktaToken:                userConfig.OktaToken,
+		Org:                      userConfig.Org,
 		ProjectCommandBuilder: &events.DefaultProjectCommandBuilder{
 			ParserValidator:   validator,
 			ProjectFinder:     &events.DefaultProjectFinder{},
